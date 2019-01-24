@@ -68,6 +68,8 @@ public class PlayerHealth : MonoBehaviour
 
 					// ... Trigger the 'Die' animation state
 					anim.SetTrigger("Die");
+
+                    Score.GameOver = true;
 				}
 			}
 		}

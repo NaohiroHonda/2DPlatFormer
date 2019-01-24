@@ -15,19 +15,31 @@ public class Spawner : MonoBehaviour
         // Start calling the Spawn function repeatedly after a delay .
         // InvokeRepeating("Spawn", spawnDelay, spawnTime);
 
-        timer = spawnTimeDefault;
+        TimerInit();
         spawnTime = spawnTimeDefault;
         spawnDelay = spawnDelayDefault;
 	}
 
     private void Update()
     {
+        if (Score.GameOver) return;
         timer -= Time.deltaTime;
+
+        if(timer <= 0.0f)
+        {
+            Spawn();
+        }
+    }
+
+    private static float Ratio()
+    {
+        float val = (1.0f - (float)Score.score / 50000f);
+        return (val < 0.0f) ? 0.0f : val * val;
     }
 
     private void TimerInit()
     {
-        timer = Random.Range(spawnTimeDefault, spawnTimeDefault + spawnDelayDefault);
+        timer = Random.Range(spawnTime, spawnTime + spawnDelay);
     }
 
     void Spawn ()
@@ -42,5 +54,13 @@ public class Spawner : MonoBehaviour
 		{
 			p.Play();
 		}
-	}
+
+        spawnTime = spawnTimeDefault * Ratio();
+        //spawn速度上限を1flameに抑制
+        if (spawnTime < 1.0f / 60f) spawnTime = 1.0f / 60f;
+
+        spawnDelay = spawnDelayDefault * Ratio();
+
+        TimerInit();
+    }
 }

@@ -47,6 +47,13 @@ namespace Assets.Adds
             }
         }
 
+        public static void Init()
+        {
+            killCountBomb = 0;
+            bombLevel = 0;
+            BombType = BombType.Timer;
+        }
+
         public static int GetBombDamage { get { return bombDamage[bombLevel]; } }
 
         public static float GetBombRadius { get { return bombRadius[bombLevel]; } }

@@ -31,12 +31,13 @@ public class HealthPickup : MonoBehaviour
 			// Increasse the player's health by the health bonus but clamp it at 100.
 			playerHealth.health += healthBonus;
 			playerHealth.health = Mathf.Clamp(playerHealth.health, 0f, 100f);
+            Score.life++;
 
 			// Update the health bar.
 			playerHealth.UpdateHealthBar();
 
 			// Trigger a new delivery.
-			pickupSpawner.StartCoroutine(pickupSpawner.DeliverPickup());
+			//pickupSpawner.StartCoroutine(pickupSpawner.DeliverPickup());
 
 			// Play the collection sound.
 			AudioSource.PlayClipAtPoint(collect,transform.position);

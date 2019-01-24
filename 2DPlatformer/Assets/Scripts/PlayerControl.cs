@@ -34,6 +34,7 @@ public class PlayerControl : MonoBehaviour
 
 	void Update()
 	{
+        if (Score.GameOver) return;
 		// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
 		grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));  
 
@@ -45,6 +46,7 @@ public class PlayerControl : MonoBehaviour
 
 	void FixedUpdate ()
 	{
+        if (Score.GameOver) return;
 		// Cache the horizontal input.
 		float h = Input.GetAxis("Horizontal");
 

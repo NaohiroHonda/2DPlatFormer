@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Assets.Adds;
 
 public class Remover : MonoBehaviour
 {
 	public GameObject splash;
+    public Score score;
 
+    private void Start()
+    {
+        score = GameObject.Find("Score").GetComponent<Score>();
+    }
 
-	void OnTriggerEnter2D(Collider2D col)
+    void OnTriggerEnter2D(Collider2D col)
 	{
         if (col.gameObject.tag == "Trigger") return;
 		// If the player hits the trigger...
@@ -26,6 +32,7 @@ public class Remover : MonoBehaviour
 			Instantiate(splash, col.transform.position, transform.rotation);
 			// ... destroy the player.
 			Destroy (col.gameObject);
+            Score.GameOver = true;
 			// ... reload the level.
 			StartCoroutine("ReloadGame");
 		}
@@ -52,5 +59,7 @@ public class Remover : MonoBehaviour
 		yield return new WaitForSeconds(2);
 		// ... and then reload the level.
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        score.Init();
+        PowerUpManager.Init();
 	}
 }

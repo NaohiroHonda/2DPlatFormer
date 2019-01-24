@@ -4,7 +4,7 @@ using System.Collections;
 public class PickupSpawner : MonoBehaviour
 {
 	public GameObject[] pickups;				// Array of pickup prefabs with the bomb pickup first and health second.
-	public float pickupDeliveryTime = 4f;		// Delay on delivery.
+	public float pickupDeliveryTime = 2f;		// Delay on delivery.
 	public float dropRangeLeft;					// Smallest value of x in world coordinates the delivery can happen at.
 	public float dropRangeRight;				// Largest value of x in world coordinates the delivery can happen at.
 	public float highHealthThreshold = 75f;		// The health of the player, above which only bomb crates will be delivered.
@@ -12,6 +12,8 @@ public class PickupSpawner : MonoBehaviour
 
     public float dropRangeTop;
     public float dropRangeBottom;
+
+    private float timer;
 
 	private PlayerHealth playerHealth;			// Reference to the PlayerHealth script.
 
@@ -26,21 +28,40 @@ public class PickupSpawner : MonoBehaviour
 	void Start ()
 	{
 		// Start the first delivery.
-		StartCoroutine(DeliverPickup());
+		// StartCoroutine(DeliverPickup());
+        timer = pickupDeliveryTime;
 	}
 
+    public void Update()
+    {
+        if (Score.GameOver) return;
 
-	public IEnumerator DeliverPickup()
+        timer -= Time.deltaTime;
+        if(timer < 0.0f)
+        {
+            Spawn();
+            timer = pickupDeliveryTime;
+        }
+    }
+
+
+    public IEnumerator DeliverPickup()
 	{
 		// Wait for the delivery delay.
 		yield return new WaitForSeconds(pickupDeliveryTime);
 
-		// Create a random x coordinate for the delivery in the drop range.
-		float dropPosX = Random.Range(dropRangeLeft, dropRangeRight);
+        Spawn();
+	}
+
+    private void Spawn()
+    {
+        // Create a random x coordinate for the delivery in the drop range.
+
+        float dropPosX = Random.Range(dropRangeLeft, dropRangeRight);
         float dropPosY = Random.Range(dropRangeBottom, dropRangeTop);
 
-		// Create a position with the random x coordinate.
-		Vector3 dropPos = new Vector3(dropPosX, dropPosY, 1f);
+        // Create a position with the random x coordinate.
+        Vector3 dropPos = new Vector3(dropPosX, dropPosY, 1f);
 
         //// If the player's health is above the high threshold...
         //if(playerHealth.health >= highHealthThreshold)
@@ -54,12 +75,12 @@ public class PickupSpawner : MonoBehaviour
         {
             //本来はhealthの条件判断ifに対して下のelse
         }
-		// Otherwise...
-		else
-		{
+        // Otherwise...
+        else
+        {
             // ... instantiate a random pickup at the drop position.
             int pickupIndex = Random.Range(0, pickups.Length);
-			Instantiate(pickups[pickupIndex], dropPos, Quaternion.identity);
-		}
-	}
+            Instantiate(pickups[pickupIndex], dropPos, Quaternion.identity);
+        }
+    }
 }
